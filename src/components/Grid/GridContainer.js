@@ -7,7 +7,7 @@ export default function GridContainer(props) {
 
   const styles = {
     grid: {
-      margin: "0 -15px !important",
+      margin: "0",
       width: "unset"
     }
   };
