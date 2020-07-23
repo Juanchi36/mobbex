@@ -15,9 +15,7 @@ import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import { SyncLoader } from 'react-spinners';
 import ProgressButton from '../../components/Button/ProgressButton';
-// import AwesomeButtonProgress from 'react-awesome-button/src/components/AwesomeButtonProgress';
-// import ProgressButton from 'react-progress-button'
-// import '../../../node_modules/react-progress-button/react-progress-button.css';
+import styles from './styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -77,10 +75,9 @@ function Cart(props) {
     })
     setProducts(productsTemp);
   }
-
+  // eslint-disable-next-line
   const [orders, setOrders] = useState([]);
   const [products, setProducts] = useState([]);
-  // const [buttonState, setButtonState] = useState('');
 
   const setIcon = (type) => {
     switch (type) {
@@ -123,21 +120,22 @@ function Cart(props) {
         description: product.description,
         total: product.price
       })
+      return true;
     })
     return items;
   };
 
   return (
-    <div style={{ textAlign: 'center' }}>
+    <div style={styles.main}>
       <GridContainer>
         <GridItem xs={12} sm={6} md={6}>
-          <div style={{ textAlign: 'center', marginTop: 20 }}>
+          <div style={styles.title}>
             <Typography variant="h5" className={classes.title}>
               Products
             </Typography>
           </div>
           {!products[0] ? (
-            <div style={{ margin: 50 }}>
+            <div style={styles.loader}>
               <SyncLoader size={15} color={"#5e0070"} loading={true} />
             </div>
           ) : (
@@ -150,20 +148,16 @@ function Cart(props) {
                           <CardIcon color={setIcon(product.type)[1]}>
                             {setIcon(product.type)[0]}
                           </CardIcon>
-                          <h2 style={{ fontSize: 24, color: "#999", margin: 0, paddingTop: 10 }}>{product.brand}</h2>
-                          {/* <p style={{ color: "#3C4858", marginTop: 0 }}>
-                            {product.brand}
-                          </p> */}
+                          <h2 style={styles.header}>{product.brand}</h2>
                         </CardHeader>
                         <CardBody>
-                          <p style={{ color: "#3C4858", marginTop: 0 }}>
+                          <p style={styles.paragraph}>
                             {product.description}
                           </p>
                         </CardBody>
                         <CardFooter stats>
-                          <div style={{ color: "#000  ", display: "inline-flex", fontSize: 16, lineHeight: "22px", width: '100%', justifyContent: 'flex-end' }}>
-                            {/* <AttachMoneyIcon /> */}
-                            <div style={{ marginLeft: 10 }}>
+                          <div style={styles.footer}>
+                            <div style={styles.price}>
                               {formatter.format(product.price)}
                             </div>
                           </div>
@@ -176,35 +170,35 @@ function Cart(props) {
             )}
         </GridItem>
         <GridItem xs={12} sm={6} md={6}>
-          <div style={{ textAlign: 'center', marginTop: 20 }}>
+          <div style={styles.title}>
             <Typography variant="h5" className={classes.title}>
               Payment
             </Typography>
           </div>
           {!products[0] ? (
-            <div style={{ margin: 50 }}>
+            <div style={styles.loader}>
               <SyncLoader size={15} color={"#5e0070"} loading={true} />
             </div>
           ) : (
-              <GridContainer style={{ justifyContent: 'center' }}>
+              <GridContainer style={styles.container}>
                 <GridItem xs={12} sm={10} md={10}>
                   <Card>
                     <CardHeader color="warning" stats icon>
                       <CardIcon color="success">
                         <AttachMoneyIcon />
                       </CardIcon>
-                      <h2 style={{ fontSize: 24, color: "#999", margin: 0, paddingTop: 10 }}>Total {getTotal()}</h2>
+                      <h2 style={styles.header}>Total {getTotal()}</h2>
                     </CardHeader>
                     <CardBody>
 
                       {products.map((product, key) => {
                         return (
                           <div key={key}>
-                            <div style={{ display: 'inline-flex', width: '70%', justifyContent: 'space-between' }}>
-                              <p style={{ color: "#3C4858", marginTop: 0 }}>
+                            <div style={styles.products}>
+                              <p style={styles.productTitle}>
                                 {product.title}
                               </p>
-                              <p style={{ color: "#3C4858", marginTop: 0 }}>
+                              <p style={styles.productTitle}>
                                 {formatter.format(product.price)}
                               </p>
                             </div>
@@ -213,7 +207,7 @@ function Cart(props) {
                       })}
                     </CardBody>
                     <CardFooter stats>
-                      <GridContainer style={{ width: '100%' }}>
+                      <GridContainer style={styles.buttons}>
                         <GridItem xs={12} sm={6} md={6}>
                           <ProgressButton
                             type={'pay-order'}
@@ -226,7 +220,7 @@ function Cart(props) {
                               due: { day: 18, month: 8, year: 20 },
                               secondDue: { day: 30, month: 8, year: 20 },
                               return_url: 'localhost:3000',
-                              webhook: 'localhost:3000/my-payments',
+                              webhook: 'https://00c39eee80a4.ngrok.io/api/hook-listener',
                               items: getItems()
                             }}
                             setPayOrder={props.setPayOrder}
@@ -237,16 +231,13 @@ function Cart(props) {
                             type={'checkout'}
                             data={{
                               total: getTotalPlain(),
+                              currency: 'USD',
                               description: 'Pay order for user@user.com',
-                              email: 'user@user.com',
-                              phone: '55555555',
                               reference: '5f1359e5e68ad255f0b8f9eb',
-                              due: { day: 18, month: 8, year: 20 },
-                              secondDue: { day: 30, month: 8, year: 20 },
                               return_url: 'localhost:3000',
-                              webhook: 'localhost:3000/my-payments',
+                              webhook: 'https://00c39eee80a4.ngrok.io/api/hook-listener',
+                              items: getItems(),
                             }}
-                            setPayOrder={props.setPayOrder}
                           />
                         </GridItem>
                       </GridContainer>

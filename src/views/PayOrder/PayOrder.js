@@ -7,13 +7,11 @@ import CardHeader from '../../components/Card/CardHeader';
 import CardFooter from '../../components/Card/CardFooter';
 import CardIcon from '../../components/Card/CardIcon';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import { purple } from '@material-ui/core/colors';
+import { makeStyles } from '@material-ui/core/styles';
 import PayOrderContext from '../../contexts/payOrderContext';
 import { SyncLoader } from 'react-spinners';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import Button from '@material-ui/core/Button';
+import styles from './styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,19 +42,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ColorButton = withStyles((theme) => ({
-  root: {
-    color: theme.palette.getContrastText(purple[700]),
-    backgroundColor: purple[700],
-    '&:hover': {
-      backgroundColor: purple[900],
-    },
-  },
-}))(Button);
-
 function PayOrder(props) {
   const classes = useStyles();
-  const { payOrderData } = useContext(PayOrderContext); console.log(payOrderData)
+  const { payOrderData } = useContext(PayOrderContext);
 
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -64,77 +52,44 @@ function PayOrder(props) {
   });
 
   return (
-    <GridContainer style={{ width: '100%' }}>
+    <GridContainer style={styles.container}>
       <Typography variant="h5" className={classes.title}>
-        PAY ORDER
+        Pay Order
       </Typography>
-      <div style={{ textAlign: 'center', marginTop: 20, width: '100%' }}>
+      <div style={styles.card}>
         {!payOrderData.app ? (
-          <div style={{ margin: 50 }}>
+          <div style={styles.loader}>
             <SyncLoader size={15} color={"#5e0070"} loading={true} />
           </div>
         ) : (
             <div>
-              <GridContainer>
-                <GridItem xs={12} sm={6} md={6}>
+              <GridContainer style={styles.gridContainer}>
+                <GridItem xs={12} sm={4} md={4} style={styles.item}>
                   <Card>
                     <CardHeader color="warning" stats icon>
                       <CardIcon color={'success'}>
                         <AttachMoneyIcon />
                       </CardIcon>
-                      <h2 style={{ fontSize: 24, color: "#999", margin: 0, paddingTop: 10 }}>Total Amount</h2>
+                      <h2 style={styles.title}>Make the payment</h2>
                     </CardHeader>
                     <CardBody>
-                      <p style={{ color: "#3C4858", marginTop: 0, fontSize: 20, marginBottom: 0 }}>
-                        {formatter.format(payOrderData.total)}
+                      <p style={styles.paragraph}>
+                        Total {formatter.format(payOrderData.total)}
                       </p>
-                    </CardBody>
-                    <CardFooter stats>
-                      <div style={{ color: "#000  ", display: "inline-flex", fontSize: 16, lineHeight: "22px", width: '100%', justifyContent: 'flex-end' }}>
-                        <div style={{ marginLeft: 10 }}>
-                          {/* {formatter.format(product.price)} */}
-                        Due date : {new Date(payOrderData.dueDate).toISOString().slice(0, 10)}
-                        </div>
-                      </div>
-                    </CardFooter>
-                  </Card>
-                </GridItem>
-                <GridItem xs={12} sm={6} md={6}>
-                  <Card>
-                    <CardHeader color="warning" stats icon>
-                      <CardIcon color={'info'}>
-                        <AccountBalanceIcon />
-                      </CardIcon>
-                      <h2 style={{ fontSize: 24, color: "#999", margin: 0, paddingTop: 10 }}>Make the payment</h2>
-                    </CardHeader>
-                    <CardBody>
-                      <a style={{ color: "#3C4858", marginTop: 0, fontSize: 20 }} href={payOrderData.url}>
-                        {payOrderData.url}
+                      <a style={styles.link} href={payOrderData.url}>
+                        Click here
                       </a>
                     </CardBody>
                     <CardFooter stats>
-                      <div style={{ color: "#000  ", display: "inline-flex", fontSize: 16, lineHeight: "22px", width: '100%', justifyContent: 'flex-end' }}>
-                        <div style={{ marginLeft: 10 }}>
-                          {/* {formatter.format(product.price)} */}
-                          {payOrderData.email}
+                      <div style={styles.footer}>
+                        <div style={styles.date}>
+                          Due date : {new Date(payOrderData.dueDate).toISOString().slice(0, 10)}
                         </div>
                       </div>
                     </CardFooter>
                   </Card>
                 </GridItem>
               </GridContainer>
-              <ColorButton
-                variant="contained"
-                size="large"
-                style={{
-                  width: '98%',
-                  height: 60,
-                  marginBottom: 100
-                }}
-                onClick={() => props.setPayments(true)}
-              >
-                SEE MY PAYMENTS
-              </ColorButton>
             </div>
           )
         }

@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   toolBar: {
-    background: '#5e0070',
+    background: '#8e24aa',
     borderRadius: 3,
     border: 0,
     color: 'white',
@@ -33,8 +33,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MenuAppBar() {
+export default function MenuAppBar(props) {
   const classes = useStyles();
+  // eslint-disable-next-line
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -47,15 +48,22 @@ export default function MenuAppBar() {
     setAnchorEl(null);
   };
 
+  const handlePayments = () => {
+    props.setPayments(true);
+    setAnchorEl(null);
+  };
+
+  const handleCart = () => {
+    props.setPayments(false);
+    setAnchorEl(null);
+  };
+
   return (
     <div className={classes.root}>
-      <AppBar position="static" classes={{root: classes.appBar}}>
+      <AppBar position="static" classes={{ root: classes.appBar }}>
         <Toolbar classes={{
-        root: classes.toolBar,
-      }}>
-          <Typography variant="h5" className={classes.title}>
-            Tech Providers - Cart
-          </Typography>
+          root: classes.toolBar,
+        }}>
           {auth && (
             <div>
               <IconButton
@@ -65,30 +73,48 @@ export default function MenuAppBar() {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <AccountCircle />
+                <MenuIcon />
               </IconButton>
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
                 anchorOrigin={{
                   vertical: 'top',
-                  horizontal: 'right',
+                  horizontal: 'left',
                 }}
                 keepMounted
                 transformOrigin={{
                   vertical: 'top',
-                  horizontal: 'right',
+                  horizontal: 'left',
                 }}
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={handlePayments}>My payments</MenuItem>
+                <MenuItem onClick={handleCart}>Shopping Cart</MenuItem>
               </Menu>
             </div>
           )}
+          <Typography
+            variant="h5"
+            className={classes.title}
+            onClick={() => props.setPayments(false)}
+            style={{ cursor: 'pointer' }}
+          >
+            Tech Providers - Cart
+          </Typography>
+          <div>
+            <IconButton
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+          </div>
         </Toolbar>
       </AppBar>
-    </div>
+    </div >
   );
 }
